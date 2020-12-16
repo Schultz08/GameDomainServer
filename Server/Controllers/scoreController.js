@@ -75,38 +75,4 @@ router.put("/updateScore", (req, res) => {
     //     .then(data => res.status(200).json({ returned: data }))
 })
 
-
-
-// router.post('/login', async (req, res) => {
-//     console.log(1)
-//     let {email, password} = req.body;
-//     try {
-//         let loginUser = await User.findOne({
-//             where: {email}
-//         })
-//         if(loginUser && await bcrypt.compare(password, loginUser.password)) {
-//             const token = jwt.sign({id: loginUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24})
-//             res.status(200).json({
-//                 message: "Successful Login",
-//                 user: loginUser,
-//                 token
-//             })
-//         } else {
-//             res.status(401).json({
-//                 error: "Failed to login"
-//             })
-//         }
-//     } catch (error) {
-//         res.status(500).json({
-//             error: "Error logging in"
-//         })
-//     }
-// });
-
-// router.get('/:id', (req, res) => {
-//     User.findOne({where:{id:req.params.id}})
-//     .then(data => res.status(200).json(data))
-//     .catch(err => res.status(500).json(err))
-// }) 
-
 module.exports = router;

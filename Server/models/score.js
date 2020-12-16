@@ -1,7 +1,7 @@
-const {DataTypes} = require('sequelize');
-const db = require('../db');
+const {DataTypes} = require("sequelize");
+const db = require("../db");
 
-const Score = db.define('score', {
+const Score = db.define("score", {
     gameName: {
         type: DataTypes.STRING,
         allowNull: false,
