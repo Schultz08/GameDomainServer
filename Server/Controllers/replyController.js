@@ -3,7 +3,7 @@ const {Reply} = require("../models/");
 
 
 router.post("/reply", (req, res) => {
-    let {subject, messageBody, parentMessageId, senderId} = req.body
+    let {subject, messageBody, parentMessageId} = req.body
 
     Reply.create({
         senderId: req.user.id,
@@ -36,6 +36,7 @@ router.put("/updateReply/:id", (req, res) => {
 })
 
 router.delete("/deleteReply/:id", async (req, res) => {
+
     let reply = await Reply.findOne({where: {id: req.params.id}})
     .then(foundReply => {
         if(foundReply == null){
