@@ -16,6 +16,9 @@ Message.belongsTo(Conversation, {foreignKey: "conversationId"})
 User.hasMany(Message, {foreignKey: "senderId"})
 Message.belongsTo(User, {foreignKey: "senderId"})
 
+User.hasMany(Reply, {foreignKey: "senderId"})
+Reply.belongsTo(User, {foreignKey: "senderId"})
+
 Message.hasMany(Reply, {foreignKey: "parentMessageId"})
 Reply.belongsTo(Message, {foreignKey: "parentMessageId"})
 
