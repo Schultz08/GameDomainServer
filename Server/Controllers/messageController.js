@@ -1,6 +1,5 @@
 const router = require("express").Router();
-const { Message } = require("../models/");
-const { Conversation} = require("../models/");
+const { Message, Conversation, Reply } = require("../models/");
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 
 router.post("/newMessage", (req, res) => {
@@ -29,7 +28,7 @@ router.post("/newMessage", (req, res) => {
 })
 
 router.get("/byId/:id", (req, res) => {
-    Message.findOne({where: {id: req.params.id }})
+    Message.findOne({where: {id: req.params.id }, include: [{model: Reply}]})
     .then(data => {
         if(!data){
             res.status(404).json({NotFound: "No matching Message"})
