@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const {User} = require('../models/');
+const {Conversation} = require("../models/")
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -21,10 +22,25 @@ router.post('/register', async (req, res) => {
             userName,
         })
         const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24})
+
+       let newConvo =  Conversation.create({
+            recivingId: newUser.id,
+            groupId: null,
+            is_read: null
+        }).catch(err => {
+            if(err instanceof UniqueConstraintError){
+                res.status(409).json({error: "Conversation already exist"})
+            }
+            else{
+                res.status(500).json({error: err})
+            }
+        })
+        
         res.status(201).json({
             message: "User Registered!",
             user: newUser,
-            token: token
+            token: token,
+            conversation: newConvo
         })
     } catch (error) {
         if (error instanceof UniqueConstraintError) {

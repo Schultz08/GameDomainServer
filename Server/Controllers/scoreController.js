@@ -1,5 +1,5 @@
-const router = require('express').Router();
-const { User } = require('../models/');
+const router = require("express").Router();
+const { User } = require("../models/");
 const { Score } = require("../models/");
 
 const { UniqueConstraintError } = require('sequelize/lib/errors');
@@ -9,7 +9,6 @@ const { UniqueConstraintError } = require('sequelize/lib/errors');
 router.post('/score', async (req, res) => {
     let { gameName, score } = req.body;
     let theID = req.user.id
-    let query = req
 
     try {
         const newPost = await Score.create({

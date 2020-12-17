@@ -1,18 +1,20 @@
 const {DataTypes} = require("sequelize");
-const { databaseVersion } = require("../db");
 const db = require("../db");
 
 const Conversation = db.define("conversation", {
     recivingId: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        unique: "compositeIndex"
     },
     groupId: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        unique: true
     },
     is_read: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: true
     }
 })
 

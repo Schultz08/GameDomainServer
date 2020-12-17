@@ -1,7 +1,7 @@
-const {DataTypes} = require("sequelize");
+const {DataType} = require("sequelize");
 const db = require("../db");
 
-const Message = db.define("message", {
+const Reply = db.define("reply", {
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -14,7 +14,13 @@ const Message = db.define("message", {
     messageBody: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    parentMessageId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        unique: true
     }
+
 })
 
-module.exports = Message;
+module.exports = Reply;
