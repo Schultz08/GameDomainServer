@@ -17,7 +17,7 @@ router.post('/score', async (req, res) => {
             userId: req.user.id
         }).catch(err => {
             if (err instanceof UniqueConstraintError) {
-                res.status(500).json({error: "duplicated entries"})
+                res.status(409).json({error: "duplicated entries"})
             }
             else {
                 res.status(500).json({ err: err })

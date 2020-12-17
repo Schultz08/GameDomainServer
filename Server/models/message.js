@@ -5,7 +5,6 @@ const Message = db.define("message", {
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true
     },
     subject: {
         type: DataTypes.STRING,

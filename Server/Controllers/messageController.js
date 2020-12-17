@@ -4,10 +4,12 @@ const { Conversation} = require("../models/");
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 
 router.post("/newMessage", (req, res) => {
-    let { subject, messageBody, recivingId} = res.body
+    let { subject, messageBody, recivingId} = req.body
+    console.log(recivingId)
 
     Conversation.findOne({where: {recivingId: recivingId}})
     .then(reciving => {
+        console.log(reciving)
         if(!reciving)
         {
             res.status(404).json({NotFound: "No Reciver"})
@@ -17,7 +19,8 @@ router.post("/newMessage", (req, res) => {
                 senderId: req.user.id,
                 subject: subject,
                 messageBody: messageBody,
-                parentMessageId: null
+                conversationId: recivingId
+                // conversationId: reciving.id for clientside
             })
             .then(newMessage => res.status(200).json({Created: newMessage}))
             .catch(err => res.status(500).json({err: err}))

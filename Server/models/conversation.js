@@ -5,7 +5,6 @@ const Conversation = db.define("conversation", {
     recivingId: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        unique: "compositeIndex"
     },
     groupId: {
         type: DataTypes.INTEGER,

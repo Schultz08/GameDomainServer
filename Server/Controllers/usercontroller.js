@@ -85,11 +85,24 @@ router.post('/login', async (req, res) => {
         })
     }
 });
+router.get("/byUserName", (req, res) => {
+    User.findOne({where: {userName: req.body.userName}})
+    .then(data => {
+        if(data == null){
+            res.status(404).json({notFound:`${req.body.userName}`})
+        }
+        res.status(200).json({recivingId: data.id})
+})
+    .catch(err => {
+        res.status(500).json({err: err})
+    })
+})
 
-router.get('/:id', (req, res) => {
-    User.findOne({where:{id:req.params.id}})
+router.get('by/:id', (req, res) => {
+    User.findOne({where:{id: req.params.id}})
     .then(data => res.status(200).json(data))
     .catch(err => res.status(500).json(err))
-}) 
+})
+
 
 module.exports = router;
