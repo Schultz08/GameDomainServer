@@ -11,6 +11,7 @@ app.use(require('./middleware/headers'));
 app.use('/user', controllers.userController);
 app.use('/score', validateSession, controllers.scoreController);
 app.use("/message", validateSession, controllers.messageController);
+app.use("/reply", validateSession, controllers.replyController);
 
 
 db.authenticate()

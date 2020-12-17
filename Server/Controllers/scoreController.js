@@ -49,13 +49,12 @@ router.get("/singleUserSorces", (req, res) => {
 })
 
 router.put("/updateScore", (req, res) => {
-    let { gameName, score } = req.body
-    console.log(req.user.id)
+    let { gameName, score } = req.body;
+
     Score.update({score}, {where: {userId: req.user.id, gameName: gameName}})
-    .then(oldScore => { console.log(oldScore)
+    .then(oldScore => {
         Score.findOne({where: {userId: req.user.id, gameName: gameName}})
         .then(newScore =>{
-            console.log(newScore)
             res.status(200).json({
                 newscore: newScore,
                 message: "new high score!!",
