@@ -14,4 +14,9 @@ router.post("/reply", (req, res) => {
     .then(newReply => res.status(200).json({message:"Posted Reply", newReply}))
 })
 
+router.get("/getReply/:id", (req, res) => {
+    Reply.findOne({where: {id: req.params.id}})
+
+})
+
 module.exports = router;
