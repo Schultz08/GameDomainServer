@@ -7,7 +7,6 @@ router.post("/newMessage", (req, res) => {
 
     Conversation.findOne({where: {recivingId: recivingId}})
     .then(reciving => {
-        console.log(reciving)
         if(!reciving)
         {
             res.status(404).json({NotFound: "No Reciver"})
@@ -57,6 +56,23 @@ router.delete("/deleteMessage/:id", (req, res) => {
 
     Message.destroy({where: {id: req.params.id}})
     .then(data => res.status(200).json({deleted: data}))
+    .catch(err => res.status(500).json({err: err}))
+})
+
+router.get("/getMail", (req, res) => {
+    console.log(req.user.id)
+    Conversation.findOne({
+        where: {recivingId: req.user.id}, 
+        include: [
+            {
+                model:Message,
+                include: {model:Reply}
+            }
+        ]
+    })
+    .then(data => {
+        res.status(200).json(data)
+    })
     .catch(err => res.status(500).json({err: err}))
 })
 

@@ -5,7 +5,6 @@ const Reply = db.define("reply", {
     senderId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true
     },
     subject: {
         type: DataTypes.STRING,
@@ -18,7 +17,6 @@ const Reply = db.define("reply", {
     parentMessageId: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        unique: true
     }
 
 })
