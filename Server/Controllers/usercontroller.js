@@ -3,7 +3,7 @@ const {User} = require('../models');
 const {Conversation} = require("../models")
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const validateSession = require('../middleware/validateSession');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
 
 
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24})
 
        let newConvo =  Conversation.create({
-            recivingId: newUser.id,
+            receivingId: newUser.id,
             groupId: null,
             is_read: null
         }).catch(err => {
@@ -85,20 +85,27 @@ router.post('/login', async (req, res) => {
         })
     }
 });
-router.get("/byUserName", (req, res) => {
-    User.findOne({where: {userName: req.body.userName}})
+router.get("/byusername/:username", validateSession, (req, res) => {
+    console.log("akdjbas,dfnwjefrwajbfn,wk.jfN.LWJRF.Nwkfrbjwkgjb.wkerjfn,eakbgr,.kewjgrbk")
+    User.findOne({where: {userName: req.params.username}})
     .then(data => {
         if(data == null){
-            res.status(404).json({notFound:`${req.body.userName}`})
+            res.status(404).json({error:"404"})
         }
-        res.status(200).json({recivingId: data.id})
+        res.status(200).json(data)
 })
     .catch(err => {
         res.status(500).json({err: err})
     })
 })
 
-router.get('by/:id', (req, res) => {
+router.get("/theme", validateSession, (req, res) => {
+    user.findOne({where: {id: req.user.id}})
+    .then(data => res.status(200).json(data.theme))
+    .catch(err => res.status(500).json(err))
+} )
+
+router.get('by/:id',validateSession, (req, res) => {
     User.findOne({where:{id: req.params.id}})
     .then(data => res.status(200).json(data))
     .catch(err => res.status(500).json(err))

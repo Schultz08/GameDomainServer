@@ -27,6 +27,11 @@ const User = db.define('user', {
     userRole:{
         type: DataTypes.STRING,
         allowNull: true
+    },
+    theme: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "mainTheme"
     }
     
 })

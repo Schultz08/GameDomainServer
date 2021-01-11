@@ -2,7 +2,7 @@ const {DataTypes} = require("sequelize");
 const db = require("../db");
 
 const Conversation = db.define("conversation", {
-    recivingId: {
+    receivingId: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
