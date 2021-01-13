@@ -87,7 +87,6 @@ router.post('/login', async (req, res) => {
     }
 });
 router.get("/byusername/:username", validateSession, (req, res) => {
-    console.log("akdjbas,dfnwjefrwajbfn,wk.jfN.LWJRF.Nwkfrbjwkgjb.wkerjfn,eakbgr,.kewjgrbk")
     User.findOne({ where: { userName: req.params.username } })
         .then(data => {
             if (data == null) {
@@ -101,10 +100,28 @@ router.get("/byusername/:username", validateSession, (req, res) => {
 })
 
 router.get("/theme", validateSession, (req, res) => {
-    user.findOne({ where: { id: req.user.id } })
+    User.findOne({ where: { id: req.user.id } })
         .then(data => res.status(200).json(data.theme))
         .catch(err => res.status(500).json(err))
 })
+
+router.put("/theme/update", validateSession, (req, res) => {
+
+    console.log(req.body)
+    let theme = req.body.theme
+
+    User.update({theme}, { where: { id: req.user.id } })
+        .then(data => {
+            User.findOne({where: {id:req.user.id}})
+            .then(user => {
+                res.status(200).json(user.theme)
+            }
+            )
+        })
+        .catch(err => res.status(500).json(err))
+})
+
+
 
 router.get('by/:id', validateSession, (req, res) => {
     User.findOne({ where: { id: req.params.id } })
