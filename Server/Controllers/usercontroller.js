@@ -1,16 +1,17 @@
 const router = require('express').Router();
-const {User} = require('../models');
-const {Conversation} = require("../models")
+const { User } = require('../models');
+const { Conversation, Score } = require("../models")
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const validateSession = require('../middleware/validateSession');
 const { UniqueConstraintError } = require('sequelize/lib/errors');
+const { findAll } = require('../models/user');
 
 
 //* REGISTER USER
 router.post('/register', async (req, res) => {
-    
-    let {firstName, lastName, email, password, userName} = req.body;
+
+    let { firstName, lastName, email, password, userName } = req.body;
 
 
     try {
@@ -21,21 +22,21 @@ router.post('/register', async (req, res) => {
             password: bcrypt.hashSync(password, 13),
             userName,
         })
-        const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24})
+        const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 
-       let newConvo =  Conversation.create({
+        let newConvo = Conversation.create({
             receivingId: newUser.id,
             groupId: null,
             is_read: null
         }).catch(err => {
-            if(err instanceof UniqueConstraintError){
-                res.status(409).json({error: "Conversation already exist"})
+            if (err instanceof UniqueConstraintError) {
+                res.status(409).json({ error: "Conversation already exist" })
             }
-            else{
-                res.status(500).json({error: err})
+            else {
+                res.status(500).json({ error: err })
             }
         })
-        
+
         res.status(201).json({
             message: "User Registered!",
             user: newUser,
@@ -57,18 +58,18 @@ router.post('/register', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    let {email, password} = req.body;
+    let { email, password } = req.body;
     try {
         let loginUser = await User.findOne({
-            where: {email}
+            where: { email }
         })
 
-        if(loginUser == null){
-            res.status(404).json({message: "User Not Found"})
+        if (loginUser == null) {
+            res.status(404).json({ message: "User Not Found" })
         }
 
-        if(loginUser && await bcrypt.compare(password, loginUser.password)) {
-            const token = jwt.sign({id: loginUser.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24})
+        if (loginUser && await bcrypt.compare(password, loginUser.password)) {
+            const token = jwt.sign({ id: loginUser.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
             res.status(200).json({
                 message: "Successful Login",
                 user: loginUser,
@@ -87,29 +88,53 @@ router.post('/login', async (req, res) => {
 });
 router.get("/byusername/:username", validateSession, (req, res) => {
     console.log("akdjbas,dfnwjefrwajbfn,wk.jfN.LWJRF.Nwkfrbjwkgjb.wkerjfn,eakbgr,.kewjgrbk")
-    User.findOne({where: {userName: req.params.username}})
-    .then(data => {
-        if(data == null){
-            res.status(404).json({error:"404"})
-        }
-        res.status(200).json(data)
-})
-    .catch(err => {
-        res.status(500).json({err: err})
-    })
+    User.findOne({ where: { userName: req.params.username } })
+        .then(data => {
+            if (data == null) {
+                res.status(404).json({ error: "404" })
+            }
+            res.status(200).json(data)
+        })
+        .catch(err => {
+            res.status(500).json({ err: err })
+        })
 })
 
 router.get("/theme", validateSession, (req, res) => {
-    user.findOne({where: {id: req.user.id}})
-    .then(data => res.status(200).json(data.theme))
-    .catch(err => res.status(500).json(err))
-} )
-
-router.get('by/:id',validateSession, (req, res) => {
-    User.findOne({where:{id: req.params.id}})
-    .then(data => res.status(200).json(data))
-    .catch(err => res.status(500).json(err))
+    user.findOne({ where: { id: req.user.id } })
+        .then(data => res.status(200).json(data.theme))
+        .catch(err => res.status(500).json(err))
 })
+
+router.get('by/:id', validateSession, (req, res) => {
+    User.findOne({ where: { id: req.params.id } })
+        .then(data => res.status(200).json(data))
+        .catch(err => res.status(500).json(err))
+})
+
+
+//I would make admin its own controller but due to time jusr letting it chill here
+router.get("/getEmAll", validateSession, (req, res) => {
+    User.findAll({include: [{ model: Score }]})
+    .then(data => res.status(200).json(data))
+    .catch(error => res.status(500).json({error: error}))
+})
+
+router.put("/admin", validateSession, (req, res) => {
+    let { adminPassword, userRole } = req.body;
+
+    User.findOne({ where: { id: req.user.id } })
+        .then(oldUser => {
+            User.update({ userRole }, { where: { id: req.user.id } })
+                .then(newUser => {
+                    res.status(200).json({
+                        oldUser: oldUser.userRole,
+                        newUser: newUser.userRole
+                    })
+                })
+        })
+})
+
 
 
 module.exports = router;

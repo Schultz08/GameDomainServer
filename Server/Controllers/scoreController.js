@@ -42,7 +42,7 @@ router.post('/score', async (req, res) => {
 });
 
 router.get("/allScores", (req, res) => {
-    Score.findAll({include: [{model: User, attributes:["userName"]}]})
+    Score.findAll({order:[["score", "DESC"]],include: [{model: User, attributes:["userName"]}]})
     .then(data => res.status(200).json(data))
     .catch(err => res.status(200).json({err: err}))
 })
@@ -60,7 +60,7 @@ router.put("/updateScore", (req, res) => {
     Score.update({score}, {where: {userId: req.user.id, gameName: gameName}})
     .then(oldScore => {
         Score.findOne({where: {userId: req.user.id, gameName: gameName}})
-        .then(newScore =>{
+        .then(newScore => {
             res.status(200).json({
                 newscore: newScore,
                 message: "new high score!!",
@@ -69,14 +69,7 @@ router.put("/updateScore", (req, res) => {
         })
     })
     .catch(err => res.status(500).json({error: err}))
-    // User.findOne({
-    //     where: { id: req.user.id }, include: [{
-    //         model: Score,
-    //         where: { gameName: gameName }
-    //     }]
-    // })
-    // .then(data)
-    //     .then(data => res.status(200).json({ returned: data }))
+
 })
 
 module.exports = router;

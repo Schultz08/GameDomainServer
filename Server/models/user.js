@@ -32,6 +32,11 @@ const User = db.define('user', {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: "mainTheme"
+    },
+    adminPassword: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "okiedokie"
     }
     
 })
